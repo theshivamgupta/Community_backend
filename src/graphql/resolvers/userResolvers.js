@@ -1,0 +1,97 @@
+// import User from "../../models/user";
+const User = require("../../models/user");
+// import { AuthenticationError, UserInputError } from "apollo-server-errors";
+const { AuthenticationError, UserInputError } = require("apollo-server-errors");
+// import { compare, hash } from "bcryptjs";
+const { compare, hash } = require("bcryptjs");
+// import { createTokens } from "../../auth";
+const { createTokens } = require("../../auth");
+// import { isAuthenticated } from "../../auth/isAuthenticated";
+const { isAuthenticated } = require("../../auth/isAuthenticated");
+// import { PubSub } from "graphql-subscriptions";
+const { PubSub } = require("graphql-subscriptions");
+
+const ME = "ME";
+
+const pubsub = new PubSub();
+
+exports.userResolver = {
+  Query: {
+    getUsers: async () => await User.find({}).populate("posts").exec(),
+    getUserByIdFromPost: async (_, args) =>
+      await User.findById(args.id).populate("posts").exec(),
+    getUserById: async (_, args) =>
+      await User.findById(args.id).populate("posts").exec(),
+    me: async (_, __, { req }) => {
+      if (!isAuthenticated(req)) {
+        throw new Error("Not LoggedIn");
+      }
+      const user = await User.findById(req.userId).populate("posts").exec();
+      pubsub.publish(ME, {
+        currentUser: user,
+      });
+      return user;
+    },
+    ifUserExists: async (_, args) => {
+      let user = await User.find({ email: args.cred }).exec();
+      let newUser = await User.find({ username: args.cred }).exec();
+      if (newUser.length || user.length) {
+        return true;
+      }
+      return false;
+    },
+  },
+  Mutation: {
+    createUser: async (_, args) => {
+      args["password"] = await hash(args["password"], 10);
+      const user = new User(args);
+      await user.save();
+      return user;
+    },
+    login: async (_, { email, password }, { res }) => {
+      const user = await User.find({ email }).exec();
+      // console.log({ user });
+      if (!user.length) {
+        throw new UserInputError("Invalid Details");
+      }
+      const valid = await compare(password, user[0].password);
+      // console.log({ valid });
+      if (!valid) {
+        throw new AuthenticationError("Wrong Credentials");
+      }
+
+      const { accessToken, refreshToken } = createTokens(user[0]);
+      res.cookie("refresh-token", refreshToken);
+      res.cookie("access-token", accessToken);
+
+      return user[0];
+    },
+    invalidateTokens: async (_, __, { req }) => {
+      if (!req.userId) {
+        return false;
+      }
+
+      const user = await User.findById(req.userId);
+      if (!user) {
+        return false;
+      }
+      user.count += 1;
+      await user.save();
+
+      return true;
+    },
+    logout: async (_, __, { req, res }) => {
+      if (!isAuthenticated(req)) {
+        throw new Error("Not LoggedIn");
+      }
+      res.clearCookie("access-token");
+      res.clearCookie("refresh-token");
+      return true;
+    },
+  },
+  Subscription: {
+    currentUser: {
+      subscribe: (_, __, { req, res }) => pubsub.asyncIterator(ME),
+    },
+  },
+};
