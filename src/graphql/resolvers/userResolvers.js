@@ -10,10 +10,20 @@ const { createTokens } = require("../../auth");
 const { isAuthenticated } = require("../../auth/isAuthenticated");
 // import { PubSub } from "graphql-subscriptions";
 const { PubSub } = require("graphql-subscriptions");
+const nodemailer = require("nodemailer");
+const nodemailerSendgrid = require("nodemailer-sendgrid");
+const jwt = require("jsonwebtoken");
 
 const ME = "ME";
 
 const pubsub = new PubSub();
+const EMAIL_SECRET = "afsg4wgsrgteahgdbsfs";
+
+const transport = nodemailer.createTransport(
+  nodemailerSendgrid({
+    apiKey: process.env.SENDGRID_API_KEY,
+  })
+);
 
 exports.userResolver = {
   Query: {
@@ -46,6 +56,24 @@ exports.userResolver = {
       args["password"] = await hash(args["password"], 10);
       const user = new User(args);
       await user.save();
+      jwt.sign(
+        {
+          user: user?._id,
+        },
+        EMAIL_SECRET,
+        {
+          expiresIn: "1d",
+        },
+        async (err, emailToken) => {
+          const url = `https://communitybackend.herokuapp.com/confirmation/${emailToken}`;
+          transport.sendMail({
+            from: "shivamgupta3467@gmail.com",
+            to: `${user.firstName} <${user.email}>`,
+            subject: "Confirm Email",
+            html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
+          });
+        }
+      );
       return user;
     },
     login: async (_, { email, password }, { res }) => {
@@ -73,7 +101,7 @@ exports.userResolver = {
       });
       // localStorage.setItem("access-token", accessToken);
       // localStorage.setItem("refresh-token", refreshToken);
-
+      // return user[0];
       return {
         user: user[0],
         refreshToken,

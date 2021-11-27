@@ -36,6 +36,8 @@ const { postResolver } = require("./graphql/resolvers/postResolvers");
 // import { commentResolver } from "./graphql/resolvers/commentResolver";
 const { commentResolver } = require("./graphql/resolvers/commentResolver");
 
+const EMAIL_SECRET = "afsg4wgsrgteahgdbsfs";
+
 async function startApolloServer() {
   const pubsub = new PubSub();
   const app = express();
@@ -88,6 +90,20 @@ async function startApolloServer() {
     req.userId = user.id;
     next();
   });
+
+  app.get("/confirmation/:token", async (req, res) => {
+    try {
+      const data = verify(req.params.token, EMAIL_SECRET);
+      // await User.update({ confirmed: true }, { where: { id } });
+      const user = await User.findById(data.user);
+      user.confirmed = true;
+      await user.save();
+      return res.redirect("http://localhost:3000/accounts/login");
+    } catch (e) {
+      res.send(`error ${e}`);
+    }
+  });
+
   const schema = makeExecutableSchema({
     typeDefs,
     resolvers: [userResolver, postResolver, commentResolver],

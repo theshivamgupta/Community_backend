@@ -4,7 +4,7 @@
   "description": "A community for Everyone",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js"
   },
@@ -24,6 +24,8 @@
     "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
+    "nodemailer": "^6.7.2",
+    "nodemailer-sendgrid": "^1.0.3",
     "subscriptions-transport-ws": "^0.11.0",
     "uuid": "^8.3.2"
   },

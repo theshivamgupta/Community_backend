@@ -62,6 +62,10 @@ var userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,
