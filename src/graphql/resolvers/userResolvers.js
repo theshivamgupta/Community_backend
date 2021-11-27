@@ -74,6 +74,8 @@ exports.userResolver = {
       res.cookie("try", "thisistry", {
         sameSite: "lax",
       });
+      localStorage.setItem("access-token", accessToken);
+      localStorage.setItem("refresh-token", refreshToken);
       return user[0];
     },
     invalidateTokens: async (_, __, { req }) => {
