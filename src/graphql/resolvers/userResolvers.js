@@ -68,7 +68,7 @@ exports.userResolver = {
       });
       res.cookie("access-token", accessToken, {
         secure: true,
-        sameSite: "none",
+        sameSite: "lax",
         httpOnly: false,
       });
 
