@@ -66,6 +66,7 @@ exports.userResolver = {
         },
         async (err, emailToken) => {
           const url = `https://communitybackend.herokuapp.com/confirmation/${emailToken}`;
+          console.log({ url });
           transport.sendMail({
             from: "shivamgupta3467@gmail.com",
             to: `${user.firstName} <${user.email}>`,
