@@ -74,7 +74,11 @@ exports.userResolver = {
       // localStorage.setItem("access-token", accessToken);
       // localStorage.setItem("refresh-token", refreshToken);
 
-      return user[0];
+      return {
+        user: user[0],
+        refreshToken,
+        accessToken,
+      };
     },
     invalidateTokens: async (_, __, { req }) => {
       if (!req.userId) {

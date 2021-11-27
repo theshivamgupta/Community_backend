@@ -67,7 +67,7 @@ const typeDefs = gql`
       lastName: String!
       moderatorLevel: Int
     ): User!
-    login(email: String!, password: String!): User
+    login(email: String!, password: String!): LoggedInUser!
     logout: Boolean!
     invalidateTokens: Boolean!
     createPost(postImage: String!, title: String!, content: String!): Post!
