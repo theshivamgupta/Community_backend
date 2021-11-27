@@ -71,13 +71,9 @@ exports.userResolver = {
         sameSite: "none",
         httpOnly: false,
       });
-      res.cookie("try", "thisistry", {
-        sameSite: "lax",
-      });
-      if (typeof window !== "undefined") {
-        localStorage.setItem("access-token", accessToken);
-        localStorage.setItem("refresh-token", refreshToken);
-      }
+      localStorage.setItem("access-token", accessToken);
+      localStorage.setItem("refresh-token", refreshToken);
+
       return user[0];
     },
     invalidateTokens: async (_, __, { req }) => {
