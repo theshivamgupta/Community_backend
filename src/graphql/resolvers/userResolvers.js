@@ -65,7 +65,10 @@ exports.userResolver = {
         secure: true,
         sameSite: "none",
       });
-      res.cookie("access-token", accessToken);
+      res.cookie("access-token", accessToken, {
+        secure: true,
+        sameSite: "none",
+      });
 
       return user[0];
     },
