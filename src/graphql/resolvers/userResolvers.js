@@ -64,10 +64,12 @@ exports.userResolver = {
       res.cookie("refresh-token", refreshToken, {
         secure: true,
         sameSite: "none",
+        httpOnly: false,
       });
       res.cookie("access-token", accessToken, {
         secure: true,
         sameSite: "none",
+        httpOnly: false,
       });
 
       return user[0];
