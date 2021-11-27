@@ -28,6 +28,7 @@ const typeDefs = gql`
     email: String!
     password: String!
     profileImage: String
+    confirmed: Boolean!
     affiliation: String
     moderatorLevel: Int
     reporterCount: Int
