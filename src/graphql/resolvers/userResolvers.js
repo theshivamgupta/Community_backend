@@ -70,7 +70,7 @@ exports.userResolver = {
           sgMail.setApiKey(process.env.SENDGRID_API_KEY);
           console.log({ url });
           const msg = {
-            to: email, // Change to your recipient
+            to: user?.email, // Change to your recipient
             from: "shivamgupta3467@gmail.com", // Change to your verified sender
             subject: "Account Activation Link",
             html: `
