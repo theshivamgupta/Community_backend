@@ -13,7 +13,6 @@ const { PubSub } = require("graphql-subscriptions");
 const nodemailer = require("nodemailer");
 const nodemailerSendgrid = require("nodemailer-sendgrid");
 const jwt = require("jsonwebtoken");
-const sgMail = require("@sendgrid/mail");
 
 const ME = "ME";
 
@@ -53,7 +52,7 @@ exports.userResolver = {
     },
   },
   Mutation: {
-    createUser: async (_, args, { req, res }) => {
+    createUser: async (_, args) => {
       args["password"] = await hash(args["password"], 10);
       const user = new User(args);
       await user.save();
@@ -67,32 +66,12 @@ exports.userResolver = {
         },
         async (err, emailToken) => {
           const url = `https://communitybackend.herokuapp.com/confirmation/${emailToken}`;
-          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-          console.log({ url });
-          const msg = {
-            to: user?.email, // Change to your recipient
-            from: "shivamgupta3467@gmail.com", // Change to your verified sender
-            subject: "Account Activation Link",
-            html: `
-                  <h2>Activate your account</h2>
-                  <p>Click this link to confirm your email address and complete setup for your account</p>
-                  Please click this email to confirm your email: <a href="${url}">${url}</a>
-                  <h6>Team Community</h6>
-                `,
-          };
-          sgMail
-            .send(msg)
-            .then(() => {
-              console.log("email send successfully");
-              console.log("user ", user);
-              return user;
-            })
-            .catch((error) => {
-              console.log(error);
-              return res.status(400).json({
-                error: error,
-              });
-            });
+          transport.sendMail({
+            from: "shivamgupta3467@gmail.com",
+            to: `${user.firstName} <${user.email}>`,
+            subject: "Confirm Email",
+            html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
+          });
         }
       );
       return user;
