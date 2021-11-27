@@ -61,7 +61,10 @@ exports.userResolver = {
       }
 
       const { accessToken, refreshToken } = createTokens(user[0]);
-      res.cookie("refresh-token", refreshToken);
+      res.cookie("refresh-token", refreshToken, {
+        secure: true,
+        sameSite: "none",
+      });
       res.cookie("access-token", accessToken);
 
       return user[0];
