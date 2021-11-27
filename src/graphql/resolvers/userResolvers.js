@@ -95,6 +95,7 @@ exports.userResolver = {
             });
         }
       );
+      return user;
     },
     login: async (_, { email, password }, { res }) => {
       const user = await User.find({ email }).exec();
