@@ -83,6 +83,7 @@ exports.userResolver = {
           sgMail
             .send(msg)
             .then(() => {
+              console.log("email send successfully");
               return res.status(200).json({
                 message: "Verification Link Sent Successfully",
               });
