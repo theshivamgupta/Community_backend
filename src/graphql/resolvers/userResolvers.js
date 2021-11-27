@@ -67,8 +67,8 @@ exports.userResolver = {
         httpOnly: false,
       });
       res.cookie("access-token", accessToken, {
-        // secure: true,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         httpOnly: false,
       });
 
