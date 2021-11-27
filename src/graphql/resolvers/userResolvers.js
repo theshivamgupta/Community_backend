@@ -67,12 +67,13 @@ exports.userResolver = {
         async (err, emailToken) => {
           const url = `https://communitybackend.herokuapp.com/confirmation/${emailToken}`;
           console.log({ url });
-          transport.sendMail({
+          let info = await transport.sendMail({
             from: "shivamgupta3467@gmail.com",
             to: `${user.firstName} <${user.email}>`,
             subject: "Confirm Email",
             html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
           });
+          console.log(info);
         }
       );
       return user;
