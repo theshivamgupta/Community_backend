@@ -71,10 +71,14 @@ exports.userResolver = {
         sameSite: "none",
         httpOnly: false,
       });
-      localStorage.setItem("access-token", accessToken);
-      localStorage.setItem("refresh-token", refreshToken);
+      // localStorage.setItem("access-token", accessToken);
+      // localStorage.setItem("refresh-token", refreshToken);
 
-      return user[0];
+      return {
+        user: user[0],
+        accessToken,
+        refreshToken,
+      };
     },
     invalidateTokens: async (_, __, { req }) => {
       if (!req.userId) {
