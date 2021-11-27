@@ -53,7 +53,7 @@ exports.userResolver = {
     },
   },
   Mutation: {
-    createUser: async (_, args) => {
+    createUser: async (_, args, { req, res }) => {
       args["password"] = await hash(args["password"], 10);
       const user = new User(args);
       await user.save();
