@@ -72,7 +72,7 @@ exports.userResolver = {
         httpOnly: false,
       });
       res.cookie("try", "thisistry", {
-        sameSite: "none",
+        sameSite: "lax",
       });
       return user[0];
     },
