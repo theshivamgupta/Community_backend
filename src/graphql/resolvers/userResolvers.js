@@ -84,9 +84,7 @@ exports.userResolver = {
             .send(msg)
             .then(() => {
               console.log("email send successfully");
-              return res.status(200).json({
-                message: "Verification Link Sent Successfully",
-              });
+              return user;
             })
             .catch((error) => {
               console.log(error);
@@ -96,7 +94,6 @@ exports.userResolver = {
             });
         }
       );
-      return user;
     },
     login: async (_, { email, password }, { res }) => {
       const user = await User.find({ email }).exec();
