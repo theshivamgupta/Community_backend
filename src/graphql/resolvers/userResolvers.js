@@ -71,7 +71,9 @@ exports.userResolver = {
         sameSite: "none",
         httpOnly: false,
       });
-
+      res.cookie("try", "thisistry", {
+        sameSite: "none",
+      });
       return user[0];
     },
     invalidateTokens: async (_, __, { req }) => {
