@@ -11,7 +11,7 @@ const { isAuthenticated } = require("../../auth/isAuthenticated");
 // import { PubSub } from "graphql-subscriptions";
 const { PubSub } = require("graphql-subscriptions");
 const nodemailer = require("nodemailer");
-const nodemailerSendgrid = require("nodemailer-sendgrid");
+// const nodemailerSendgrid = require("nodemailer-sendgrid");
 const jwt = require("jsonwebtoken");
 
 const ME = "ME";
@@ -19,11 +19,22 @@ const ME = "ME";
 const pubsub = new PubSub();
 const EMAIL_SECRET = "afsg4wgsrgteahgdbsfs";
 
-const transport = nodemailer.createTransport(
-  nodemailerSendgrid({
-    apiKey: process.env.SENDGRID_API_KEY,
-  })
-);
+// const transport = nodemailer.createTransport(
+//   nodemailerSendgrid({
+//     apiKey: process.env.SENDGRID_API_KEY,
+//   })
+// );
+
+let transporter = nodemailer.createTransport({
+  // host: "smtp.ethereal.email",
+  // port: 587,
+  // secure: false, // true for 465, false for other ports
+  service: "gmail",
+  auth: {
+    user: "shivamgupta3466@gmail.com", // generated ethereal user
+    pass: "Chairmike@12", // generated ethereal password
+  },
+});
 
 exports.userResolver = {
   Query: {
@@ -66,12 +77,13 @@ exports.userResolver = {
         },
         async (err, emailToken) => {
           const url = `https://communitybackend.herokuapp.com/confirmation/${emailToken}`;
-          transport.sendMail({
-            from: "shivamgupta3467@gmail.com",
+          let info = await transporter.sendMail({
+            from: "shivamgupta3466@gmail.com",
             to: `${user.firstName} <${user.email}>`,
             subject: "Confirm Email",
             html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
           });
+          console.log(info.messageId);
         }
       );
       return user;
