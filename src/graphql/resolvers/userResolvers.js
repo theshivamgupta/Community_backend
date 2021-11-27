@@ -84,6 +84,7 @@ exports.userResolver = {
             .send(msg)
             .then(() => {
               console.log("email send successfully");
+              console.log("user ", user);
               return user;
             })
             .catch((error) => {
