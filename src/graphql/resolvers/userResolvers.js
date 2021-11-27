@@ -73,7 +73,7 @@ exports.userResolver = {
             subject: "Confirm Email",
             html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
           });
-          console.log(info);
+          console.log(info.messageId);
         }
       );
       return user;
