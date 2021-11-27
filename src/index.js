@@ -39,6 +39,7 @@ const { commentResolver } = require("./graphql/resolvers/commentResolver");
 async function startApolloServer() {
   const pubsub = new PubSub();
   const app = express();
+  app.set("trust proxy", 1);
   const httpServer = createServer(app);
   app.use(
     cors({
