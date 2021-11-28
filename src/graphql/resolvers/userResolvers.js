@@ -166,6 +166,7 @@ exports.userResolver = {
       if (!isAuthenticated(req)) {
         throw new Error("Not LoggedIn");
       }
+      req.userId = null;
       res.clearCookie("access-token");
       res.clearCookie("refresh-token");
       return true;
