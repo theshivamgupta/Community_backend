@@ -37,7 +37,7 @@ const { postResolver } = require("./graphql/resolvers/postResolvers");
 const { commentResolver } = require("./graphql/resolvers/commentResolver");
 
 const EMAIL_SECRET = "afsg4wgsrgteahgdbsfs";
-
+//https://communityfrontend.netlify.app
 async function startApolloServer() {
   const pubsub = new PubSub();
   const app = express();

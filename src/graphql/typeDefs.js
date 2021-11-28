@@ -57,6 +57,7 @@ const typeDefs = gql`
     getCommentById(id: ID!): Comment!
     getAllFlaggedComments: [Comment]
     ifUserExists(cred: String!): Boolean!
+    getStudentUsers: [User]!
   }
   type Mutation {
     createUser(
@@ -69,6 +70,7 @@ const typeDefs = gql`
       moderatorLevel: Int
     ): User!
     login(email: String!, password: String!): LoggedInUser!
+    updateProfileImage(profileImage: String!): User!
     logout: Boolean!
     invalidateTokens: Boolean!
     createPost(postImage: String!, title: String!, content: String!): Post!

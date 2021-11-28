@@ -53,6 +53,16 @@ exports.userResolver = {
       });
       return user;
     },
+    getStudentUsers: async (_, __, { req }) => {
+      if (!isAuthenticated(req)) {
+        throw new Error("Not LoggedIn");
+      }
+      const users = await User.find({
+        confirmed: true,
+        moderatorLevel: 2,
+      }).exec();
+      return users;
+    },
     ifUserExists: async (_, args) => {
       let user = await User.find({ email: args.cred }).exec();
       let newUser = await User.find({ username: args.cred }).exec();
@@ -86,6 +96,12 @@ exports.userResolver = {
           console.log(info.messageId);
         }
       );
+      return user;
+    },
+    updateProfileImage: async (_, { profileImage }, { req, res }) => {
+      const user = await User.findById(req.userId).exec();
+      user.profileImage = profileImage;
+      await user.save();
       return user;
     },
     login: async (_, { email, password }, { res }) => {
