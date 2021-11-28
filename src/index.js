@@ -45,7 +45,7 @@ async function startApolloServer() {
   const httpServer = createServer(app);
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: "https://communityfrontend.netlify.app",
       credentials: true,
     })
   );
@@ -98,7 +98,9 @@ async function startApolloServer() {
       const user = await User.findById(data.user);
       user.confirmed = true;
       await user.save();
-      return res.redirect("http://localhost:3000/accounts/login");
+      return res.redirect(
+        "https://communityfrontend.netlify.app/accounts/login"
+      );
     } catch (e) {
       res.send(`error ${e}`);
     }
