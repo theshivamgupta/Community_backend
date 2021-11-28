@@ -73,6 +73,7 @@ const typeDefs = gql`
     updateProfileImage(profileImage: String!): User!
     logout: Boolean!
     invalidateTokens: Boolean!
+    increasePower(id: ID!): User!
     createPost(postImage: String!, title: String!, content: String!): Post!
     flagPost(postId: ID!): Post!
     deletePost(postId: ID!): Boolean!

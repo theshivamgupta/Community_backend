@@ -98,7 +98,19 @@ exports.userResolver = {
       );
       return user;
     },
+    increasePower: async (_, { id }, { req }) => {
+      if (!isAuthenticated(req)) {
+        throw new Error("Not LoggedIn");
+      }
+      const user = await User.findById(id).exec();
+      user.moderatorLevel = 1;
+      await user.save();
+      return user;
+    },
     updateProfileImage: async (_, { profileImage }, { req, res }) => {
+      if (!isAuthenticated(req)) {
+        throw new Error("Not LoggedIn");
+      }
       const user = await User.findById(req.userId).exec();
       user.profileImage = profileImage;
       await user.save();
